@@ -4,6 +4,9 @@ import Browser
 import Html exposing (Html, div, input, text, button)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
+import MyParser exposing (..)
+import Parser exposing (run)
+import Parser exposing (DeadEnd)
 
 -- MAIN
 main : Program () Model MyEvent
@@ -32,13 +35,24 @@ update msg model =
       { model | content = newContent }
 
     Validate ->
-      { model | display = model.content }
+      { model | display = case parse model.content of
+                            Err _ ->
+                              "Parse failed"
+
+                            Ok expr ->
+                              Debug.toString expr
+      }
 
 -- VIEW
 view : Model -> Html MyEvent
 view model =
   div []
-    [ input [ placeholder "[Repeat 360 [Forward 1, Left 1]]", value model.content, onInput Change ] []
-    , div [] [ text("Texte validé : " ++ model.display)] --Permet le retour à la ligne
+    [ div [] [text("Type in your code below:")]
+    , input [ placeholder "[Repeat 360 [Forward 1, Left 1]]", value model.content, onInput Change ] []
+    , div [] [ text(model.display)] --Permet le retour à la ligne
     , button [ onClick Validate ] [ text "Draw" ]
     ]
+
+parse : String -> Result (List DeadEnd) Point
+parse string =
+  run point string
