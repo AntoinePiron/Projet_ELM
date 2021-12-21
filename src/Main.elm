@@ -1,28 +1,44 @@
-module Main exposing (..)
+module Main exposing(..)
 
 import Browser
-import Html exposing (button, div, text)
-import Html.Events exposing (onClick)
+import Html exposing (Html, div, input, text, button)
+import Html.Attributes exposing (..)
+import Html.Events exposing (onInput, onClick)
 
-main : Program () Int Msg
+-- MAIN
+main : Program () Model MyEvent
 main =
-  Browser.sandbox { init = 0, update = update, view = view }
+  Browser.sandbox { init = init, update = update, view = view }
 
-type Msg = Increment | Decrement
+-- MODEL
+type alias Model =
+  { content : String
+  , display : String
+  }
+init : Model
+init =
+  { content = "" 
+  , display = ""
+  }
 
-update : Msg -> number -> number
+-- UPDATE
+type MyEvent
+  = Change String
+  | Validate
+update : MyEvent -> Model -> Model
 update msg model =
   case msg of
-    Increment ->
-      model + 1
+    Change newContent ->
+      { model | content = newContent }
 
-    Decrement ->
-      model - 1
+    Validate ->
+      { model | display = model.content }
 
-view : Int -> Html.Html Msg
+-- VIEW
+view : Model -> Html MyEvent
 view model =
   div []
-    [ button [ onClick Decrement ] [ text "-" ]
-    , div [] [ text (String.fromInt model) ]
-    , button [ onClick Increment ] [ text "+" ]
+    [ input [ placeholder "[Repeat 360 [Forward 1, Left 1]]", value model.content, onInput Change ] []
+    , div [] [ text("Texte validé : " ++ model.display)] --Permet le retour à la ligne
+    , button [ onClick Validate ] [ text "Draw" ]
     ]
