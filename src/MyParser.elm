@@ -6,6 +6,8 @@ type alias Point =
   , y : Float
   }
 
+type Inst = Forward Int | Left Int | Right Int | Repeat Int 
+
 point : Parser Point
 point =
   succeed Point

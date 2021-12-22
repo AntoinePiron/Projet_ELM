@@ -5,8 +5,7 @@ import Html exposing (Html, div, input, text, button)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import MyParser exposing (..)
-import Parser exposing (run)
-import Parser exposing (DeadEnd)
+import Parser exposing (run, DeadEnd)
 
 -- MAIN
 main : Program () Model MyEvent
