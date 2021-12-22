@@ -48,10 +48,15 @@ update msg model =
 view : Model -> Html MyEvent
 view model =
   div [class "app"]
-    [ div [] [text("Type in your code below:")]
-    , input [ placeholder "[Repeat 360 [Forward 1, Left 1]]", value model.content, onInput Change ] []
+    [ div [class "mainTitle"] [
+      text("Projet Haskell / Elm"),
+      div [class "subtitles"] [text("Par Tristan Devin, Salma Aziz-Alaoui, Yasser Issam, Antoine Piron")]
+      ]
+    , div [class "inputTitle"] [text("Type in your code below:")]
+    , input [ placeholder "[Repeat 360 [Forward 1, Left 1]]", value model.content, onInput Change, class "userInput" ] []
     , div [] [ text(model.display)] --Permet le retour à la ligne
-    , button [ onClick Validate ] [ text "Draw" ]
+    , button [ onClick Validate, class "drawButton" ] [ text "Draw" ]
+    , div [class"svgPlace"] []
     ]
 
 parse : String -> Result (List DeadEnd) Point

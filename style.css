@@ -1,3 +1,41 @@
 .app{
     text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.mainTitle{
+    font-size: 1.5em;
+    margin: 1%;
+    border: 1px dotted black;
+    padding: 1%;
+}
+
+.subtitles{
+    font-size: 0.7em;
+    color: gray;
+    font-style: italic;
+    padding-top: 1%;
+}
+
+.inputTitle{
+    margin: 1%;
+}
+
+.userInput{
+    width: 50%;
+    margin: 1%;
+}
+
+.drawButton{
+    width: 20%;
+    margin: 0.5%;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.svgPlace {
+    width: 50%;
+    height: 50%;
+    border: 2px solid gray;
+    margin: auto;
 }

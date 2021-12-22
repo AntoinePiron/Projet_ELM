@@ -5830,7 +5830,30 @@ var $author$project$Main$view = function (model) {
 			[
 				A2(
 				$elm$html$Html$div,
-				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('mainTitle')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Projet Haskell / Elm'),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('subtitles')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Par Tristan Devin, Salma Aziz-Alaoui, Yasser Issam, Antoine Piron')
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('inputTitle')
+					]),
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Type in your code below:')
@@ -5841,7 +5864,8 @@ var $author$project$Main$view = function (model) {
 					[
 						$elm$html$Html$Attributes$placeholder('[Repeat 360 [Forward 1, Left 1]]'),
 						$elm$html$Html$Attributes$value(model.content),
-						$elm$html$Html$Events$onInput($author$project$Main$Change)
+						$elm$html$Html$Events$onInput($author$project$Main$Change),
+						$elm$html$Html$Attributes$class('userInput')
 					]),
 				_List_Nil),
 				A2(
@@ -5855,12 +5879,20 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Main$Validate)
+						$elm$html$Html$Events$onClick($author$project$Main$Validate),
+						$elm$html$Html$Attributes$class('drawButton')
 					]),
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Draw')
-					]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('svgPlace')
+					]),
+				_List_Nil)
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$sandbox(
