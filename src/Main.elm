@@ -7,6 +7,8 @@ import Html.Events exposing (onInput, onClick)
 import MyParser exposing (..)
 import Parser exposing (run, DeadEnd)
 
+-- Commande to generate main.js file : elm make src/Main.elm --output=main.js
+
 -- MAIN
 main : Program () Model MyEvent
 main =
@@ -45,7 +47,7 @@ update msg model =
 -- VIEW
 view : Model -> Html MyEvent
 view model =
-  div []
+  div [class "app"]
     [ div [] [text("Type in your code below:")]
     , input [ placeholder "[Repeat 360 [Forward 1, Left 1]]", value model.content, onInput Change ] []
     , div [] [ text(model.display)] --Permet le retour à la ligne
