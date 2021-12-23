@@ -1,13 +1,13 @@
 module MyParser exposing(..)
-import Parser exposing (Parser, (|.), (|=), succeed, token, andThen, problem, commit, map, backtrackable, oneOf, chompIf)
+import Parser exposing (Parser, (|.), (|=), succeed, token, map, backtrackable, oneOf, chompIf)
 import Parser exposing (run, DeadEnd)
 
 
-keywordParser : String -> String -> Result (List DeadEnd) ()
+keywordParser : String -> String -> Result (List DeadEnd) Bool
 keywordParser check string =
   run (keyword check) string
 
-keyword : String -> Parser ()
+keyword : String -> Parser Bool
 keyword kwd =
   succeed identity
     |. backtrackable (token kwd)
@@ -15,15 +15,7 @@ keyword kwd =
         [ map (\_ -> True) (backtrackable (chompIf isVarChar))
         , succeed False
         ]
-    |> andThen (checkEnding kwd)
-
-checkEnding : String -> Bool -> Parser ()
-checkEnding kwd isBadEnding =
-  if isBadEnding then
-    problem ("expecting the `" ++ kwd ++ "` keyword")
-  else
-    commit ()
-
+    
 isVarChar : Char -> Bool
 isVarChar char =
   Char.isAlphaNum char || char == '_'
