@@ -5,13 +5,21 @@ import Parser exposing (symbol)
 import Parser exposing (spaces)
 import Parser exposing (int)
 import Parser exposing (keyword)
-import DrawingZone exposing (Inst(..))
 import Parser exposing (oneOf)
+import Parser exposing (getChompedString)
+import Parser exposing (chompIf)
+import Parser exposing (chompWhile)
 type Inst 
   = Forward Int
   | Repeat Int
   | Left Int
   | Right Int
+  | Null
+
+type alias InstStruct =
+    { cmd : String
+    , step : Int
+    }
 
 instruction : Parser Inst
 instruction = 
@@ -34,6 +42,33 @@ instruction =
         |= int
     ]
 
+word : Parser String
+word =
+  getChompedString <|
+    succeed ()
+      |. chompIf Char.isAlphaNum
+      |. chompWhile Char.isAlphaNum
+
+instructionBloc : Parser InstStruct
+instructionBloc = 
+  succeed InstStruct
+    |. symbol "["
+    |. spaces
+    |= word
+    |. spaces
+    |= int
+    |. spaces
+    |. symbol "]"
+
+instBlocParser : String -> Result (List DeadEnd) InstStruct
+instBlocParser string = 
+  run instructionBloc string
+
+
 instParser : String -> Result (List DeadEnd) Inst
 instParser string =
-  run instruction string
+  case instBlocParser string of
+    Err er ->
+      Result.Err er
+    Ok expr ->
+      run instruction (expr.cmd ++ " " ++ Debug.toString expr.step) 
