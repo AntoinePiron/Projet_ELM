@@ -1,12 +1,13 @@
 module Main exposing(..)
+-- !!!!!!!!!!
+-- Command to generate main.js file : elm make src/Main.elm --output=main.js
+-- !!!!!!!!!!
 
 import Browser
 import Html exposing (Html, div, input, text, button)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import MyParser exposing (..)
-
--- Commande to generate main.js file : elm make src/Main.elm --output=main.js
 
 -- MAIN
 main : Program () Model MyEvent
@@ -35,12 +36,12 @@ update msg model =
       { model | content = newContent }
 
     Validate ->
-      { model | display = case keywordParser "caca" model.content of
-                            Err _ ->
-                              "Parser failed"
+      { model | display = case instParser model.content of
+                            Err er ->
+                              Debug.toString er
 
-                            Ok _ ->
-                              "Parser succed"
+                            Ok expr ->
+                              Debug.toString expr
       }
 
 -- VIEW
@@ -48,7 +49,7 @@ view : Model -> Html MyEvent
 view model =
   div [class "app"]
     [ div [class "mainTitle"] [
-      text("Projet Haskell / Elm"),
+      text("Projet Elm"),
       div [class "subtitles"] [text("Par Tristan Devin, Salma Aziz-Alaoui, Yasser Issam, Antoine Piron")]
       ]
     , div [class "inputTitle"] [text("Type in your code below:")]
