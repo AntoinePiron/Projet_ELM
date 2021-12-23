@@ -5,7 +5,6 @@ import Html exposing (Html, div, input, text, button)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import MyParser exposing (..)
-import Parser exposing (run, DeadEnd)
 
 -- Commande to generate main.js file : elm make src/Main.elm --output=main.js
 
@@ -36,12 +35,12 @@ update msg model =
       { model | content = newContent }
 
     Validate ->
-      { model | display = case parse model.content of
+      { model | display = case keywordParser "caca" model.content of
                             Err _ ->
-                              "Parse failed"
+                              "Parser failed"
 
-                            Ok expr ->
-                              Debug.toString expr
+                            Ok _ ->
+                              "Parser succed"
       }
 
 -- VIEW
@@ -58,7 +57,3 @@ view model =
     , button [ onClick Validate, class "drawButton" ] [ text "Draw" ]
     , div [class"svgPlace"] []
     ]
-
-parse : String -> Result (List DeadEnd) Point
-parse string =
-  run point string
