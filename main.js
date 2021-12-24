@@ -5917,7 +5917,6 @@ var $author$project$MyParser$instruction = $elm$parser$Parser$oneOf(
 				$elm$parser$Parser$spaces),
 			$elm$parser$Parser$int)
 		]));
-var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$MyParser$instParser = function (string) {
 	var _v0 = $author$project$MyParser$instBlocParser(string);
 	if (_v0.$ === 'Err') {
@@ -5928,9 +5927,10 @@ var $author$project$MyParser$instParser = function (string) {
 		return A2(
 			$elm$parser$Parser$run,
 			$author$project$MyParser$instruction,
-			expr.cmd + (' ' + $elm$core$Debug$toString(expr.step)));
+			expr.cmd + (' ' + $elm$core$String$fromInt(expr.step)));
 	}
 };
+var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		if (msg.$ === 'Change') {
