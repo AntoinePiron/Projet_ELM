@@ -9,6 +9,7 @@ import Parser exposing (oneOf)
 import Parser exposing (getChompedString)
 import Parser exposing (chompIf)
 import Parser exposing (chompWhile)
+
 type Inst 
   = Forward Int
   | Repeat Int
@@ -71,4 +72,4 @@ instParser string =
     Err er ->
       Result.Err er
     Ok expr ->
-      run instruction (expr.cmd ++ " " ++ Debug.toString expr.step) 
+      run instruction (expr.cmd ++ " " ++ String.fromInt expr.step) 
