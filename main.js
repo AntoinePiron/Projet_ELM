@@ -5970,6 +5970,7 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
@@ -6022,9 +6023,13 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -6068,7 +6073,7 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$input,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$placeholder('[Repeat 360 [Forward 1, Left 1]]'),
+						$elm$html$Html$Attributes$placeholder('example: [Repeat 360 [Forward 1, Left 1]]'),
 						$elm$html$Html$Attributes$value(model.content),
 						$elm$html$Html$Events$onInput($author$project$Main$Change),
 						$elm$html$Html$Attributes$class('userInput')
@@ -6093,10 +6098,12 @@ var $author$project$Main$view = function (model) {
 						$elm$html$Html$text('Draw')
 					])),
 				A2(
-				$elm$html$Html$div,
+				$elm$svg$Svg$svg,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('svgPlace')
+						$elm$svg$Svg$Attributes$viewBox('0 0 500 500'),
+						$elm$svg$Svg$Attributes$width('500'),
+						$elm$svg$Svg$Attributes$height('500')
 					]),
 				_List_Nil)
 			]));
