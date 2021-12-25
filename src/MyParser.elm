@@ -10,27 +10,13 @@ import Parser exposing (getChompedString)
 import Parser exposing (chompIf)
 import Parser exposing (chompWhile)
 
-type Inst 
-  = Forward Int
-  | Repeat Int
-  | Left Int
-  | Right Int
-  | Null
-
-type alias InstStruct =
-    { cmd : String
-    , step : Int
-    }
+import MyTypes exposing (..)
 
 instruction : Parser Inst
 instruction = 
   oneOf
     [ succeed Forward
         |. keyword "Forward"
-        |. spaces
-        |= int
-    , succeed Repeat
-        |. keyword "Repeat"
         |. spaces
         |= int
     , succeed Left

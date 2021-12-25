@@ -1,23 +1,10 @@
 module DrawingZone exposing (..)
 import Svg exposing (Svg, line)
 import Svg.Attributes exposing (x1, x2, y1, y2, stroke)
-
-type Inst
-    = Forward Int
-    | Left Int
-    | Right Int
-    | Repeat Int Prog
-
-type alias Prog = List Inst
-
-type alias Cursor = 
-    { x : Float
-    , y : Float
-    , a : Float
-    }
+import MyTypes exposing (..)
 
 {--Méthode dessinant une ligne entre les deux curseurs rentré en argument--}
-getSvgLine : Cursor -> Cursor -> Svg msg
+getSvgLine : Cursor -> Cursor -> Svg MyEvent
 getSvgLine a b =
     line 
         [ x1 (String.fromFloat a.x)
@@ -46,25 +33,27 @@ changeCursor c inst =
                         in Cursor (c.x+dx) (c.y+dy) c.a
         (Left v) -> Cursor (c.x) (c.y) (changeAngle(c.a + (toFloat v)))
         (Right v) -> Cursor (c.x) (c.y) (changeAngle(c.a - (toFloat v)))
-        (Repeat _ _) -> c
+        _ -> c
 
-progCursorToSvg : Prog -> Cursor -> Cursor
-progCursorToSvg p c =
+progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> (Cursor, List (Svg MyEvent))
+progCursorToSvg p c l=
     case p of
-        [] -> c
+        [] -> (c, l)
         ((Repeat n bloc)::subprog) ->
             if n > 0 then
                 let rp = Repeat (n - 1) bloc
                 in 
-                    let cp = progCursorToSvg bloc c
-                    in progCursorToSvg (rp::subprog) cp
+                    let cp = progCursorToSvg bloc c l
+                    in progCursorToSvg (rp::subprog) (Tuple.first cp) l 
             else
-                progCursorToSvg subprog c
+                progCursorToSvg subprog c l
         (inst::subprog) ->
             let cp = changeCursor c inst
             in case inst of
-                (Forward _) -> c
+                (Forward _) -> 
+                    let conc = (getSvgLine c cp)::l
+                    in progCursorToSvg subprog cp conc
                 _ ->
-                    progCursorToSvg subprog cp
+                    progCursorToSvg subprog cp l
 
         

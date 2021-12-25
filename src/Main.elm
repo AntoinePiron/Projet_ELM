@@ -9,8 +9,9 @@ import Html.Attributes exposing (class, placeholder, value)
 import Html.Events exposing (onInput, onClick)
 import MyParser exposing (..)
 import DrawingZone exposing (..)
-import Svg exposing (svg)
+import Svg exposing (Svg, svg)
 import Svg.Attributes exposing (width, height, viewBox)
+import MyTypes exposing (..)
 
 -- MAIN
 main : Program () Model MyEvent
@@ -20,20 +21,15 @@ main =
 -- MODEL
 type alias Model =
   { content : String
-  , display : String
-  , instruction : Prog
+  , lineList : List (Svg MyEvent)
   }
 init : Model
 init =
   { content = "" 
-  , display = ""
-  , instruction = []
+  , lineList = []
   }
 
 -- UPDATE
-type MyEvent
-  = Change String
-  | Validate
 update : MyEvent -> Model -> Model
 update msg model =
   case msg of
@@ -41,13 +37,15 @@ update msg model =
       { model | content = newContent }
 
     Validate ->
-      { model | display = case instParser model.content of
-                            Err er ->
-                              Debug.toString er
+      { model | lineList = case instParser model.content of
+                            Err _ ->
+                              []
 
                             Ok expr ->
-                              Debug.toString expr
+                              (Tuple.second (progCursorToSvg [expr] (Cursor 250 250 0) []))
       }
+
+
 
 -- VIEW
 view : Model -> Html MyEvent
@@ -59,7 +57,8 @@ view model =
       ]
     , div [class "inputTitle"] [text("Type in your code below:")]
     , input [ placeholder "example: [Repeat 360 [Forward 1, Left 1]]", value model.content, onInput Change, class "userInput" ] []
-    , div [] [ text(model.display)] --Permet le retour à la ligne
     , button [ onClick Validate, class "drawButton" ] [ text "Draw" ]
-    , svg [viewBox "0 0 500 500", width "500", height "500"] []
+    , svg 
+      [viewBox "0 0 500 500", width "500", height "500"] 
+      model.lineList
     ]
