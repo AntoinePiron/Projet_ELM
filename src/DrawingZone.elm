@@ -6,7 +6,9 @@ type Inst
     = Forward Int
     | Left Int
     | Right Int
-    | Repeat Int
+    | Repeat Int Prog
+
+type alias Prog = List Inst
 
 type alias Cursor = 
     { x : Float
@@ -29,9 +31,9 @@ getSvgLine a b =
 changeAngle : Float -> Float
 changeAngle a = 
     if a < 0 then
-        changeAngle (a+360.0)
+        changeAngle (a + 360.0)
     else if a >= 360 then 
-        changeAngle (a-360.0)
+        changeAngle (a - 360.0)
     else 
         a
 
@@ -42,8 +44,27 @@ changeCursor c inst =
         (Forward v) -> let dx = toFloat v * (cos c.a / 180.0 * pi)
                            dy = toFloat v * (sin c.a / 180.0 * pi)
                         in Cursor (c.x+dx) (c.y+dy) c.a
-        (Left v) -> Cursor (c.x) (c.y) (changeAngle(c.a+(toFloat v)))
-        (Right v) -> Cursor (c.x) (c.y) (changeAngle(c.a-(toFloat v)))
-        (Repeat _) -> c
+        (Left v) -> Cursor (c.x) (c.y) (changeAngle(c.a + (toFloat v)))
+        (Right v) -> Cursor (c.x) (c.y) (changeAngle(c.a - (toFloat v)))
+        (Repeat _ _) -> c
+
+progCursorToSvg : Prog -> Cursor -> Cursor
+progCursorToSvg p c =
+    case p of
+        [] -> c
+        ((Repeat n bloc)::subprog) ->
+            if n > 0 then
+                let rp = Repeat (n - 1) bloc
+                in 
+                    let cp = progCursorToSvg bloc c
+                    in progCursorToSvg (rp::subprog) cp
+            else
+                progCursorToSvg subprog c
+        (inst::subprog) ->
+            let cp = changeCursor c inst
+            in case inst of
+                (Forward _) -> c
+                _ ->
+                    progCursorToSvg subprog cp
 
         
