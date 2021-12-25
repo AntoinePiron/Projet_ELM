@@ -28,8 +28,8 @@ changeAngle a =
 changeCursor : Cursor -> Inst -> Cursor
 changeCursor c inst =
     case inst of
-        (Forward v) -> let dx = toFloat v * (cos c.a / 180.0 * pi)
-                           dy = toFloat v * (sin c.a / 180.0 * pi)
+        (Forward v) -> let dx = toFloat v * (cos (c.a / 180.0 * pi))
+                           dy = toFloat v * (sin (c.a / 180.0 * pi))
                         in Cursor (c.x+dx) (c.y+dy) c.a
         (Left v) -> Cursor (c.x) (c.y) (changeAngle(c.a + (toFloat v)))
         (Right v) -> Cursor (c.x) (c.y) (changeAngle(c.a - (toFloat v)))
@@ -39,15 +39,16 @@ progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> (Cursor, List (Sv
 progCursorToSvg p c l=
     case p of
         [] -> (c, l)
-        ((Repeat n bloc)::subprog) ->
+        Repeat n bloc::subprog ->
             if n > 0 then
                 let rp = Repeat (n - 1) bloc
                 in 
-                    let cp = progCursorToSvg bloc c l
-                    in progCursorToSvg (rp::subprog) (Tuple.first cp) l 
+                    let 
+                        cp = progCursorToSvg bloc c l
+                    in progCursorToSvg (rp::subprog) (Tuple.first cp) (Tuple.second cp) 
             else
                 progCursorToSvg subprog c l
-        (inst::subprog) ->
+        inst::subprog ->
             let cp = changeCursor c inst
             in case inst of
                 (Forward _) -> 

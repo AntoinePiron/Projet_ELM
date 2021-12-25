@@ -5300,6 +5300,16 @@ var $author$project$MyTypes$Cursor = F3(
 	function (x, y, a) {
 		return {a: a, x: x, y: y};
 	});
+var $author$project$MyTypes$Forward = function (a) {
+	return {$: 'Forward', a: a};
+};
+var $author$project$MyTypes$Left = function (a) {
+	return {$: 'Left', a: a};
+};
+var $author$project$MyTypes$Repeat = F2(
+	function (a, b) {
+		return {$: 'Repeat', a: a, b: b};
+	});
 var $author$project$MyTypes$InstStruct = F2(
 	function (cmd, step) {
 		return {cmd: cmd, step: step};
@@ -5784,12 +5794,6 @@ var $elm$parser$Parser$run = F2(
 var $author$project$MyParser$instBlocParser = function (string) {
 	return A2($elm$parser$Parser$run, $author$project$MyParser$instructionBloc, string);
 };
-var $author$project$MyTypes$Forward = function (a) {
-	return {$: 'Forward', a: a};
-};
-var $author$project$MyTypes$Left = function (a) {
-	return {$: 'Left', a: a};
-};
 var $author$project$MyTypes$Right = function (a) {
 	return {$: 'Right', a: a};
 };
@@ -5921,10 +5925,6 @@ var $author$project$MyParser$instParser = function (string) {
 			expr.cmd + (' ' + $elm$core$String$fromInt(expr.step)));
 	}
 };
-var $author$project$MyTypes$Repeat = F2(
-	function (a, b) {
-		return {$: 'Repeat', a: a, b: b};
-	});
 var $elm$core$Basics$ge = _Utils_ge;
 var $author$project$DrawingZone$changeAngle = function (a) {
 	changeAngle:
@@ -5952,8 +5952,8 @@ var $author$project$DrawingZone$changeCursor = F2(
 		switch (inst.$) {
 			case 'Forward':
 				var v = inst.a;
-				var dy = v * (($elm$core$Basics$sin(c.a) / 180.0) * $elm$core$Basics$pi);
-				var dx = v * (($elm$core$Basics$cos(c.a) / 180.0) * $elm$core$Basics$pi);
+				var dy = v * $elm$core$Basics$sin((c.a / 180.0) * $elm$core$Basics$pi);
+				var dx = v * $elm$core$Basics$cos((c.a / 180.0) * $elm$core$Basics$pi);
 				return A3($author$project$MyTypes$Cursor, c.x + dx, c.y + dy, c.a);
 			case 'Left':
 				var v = inst.a;
@@ -5999,6 +5999,10 @@ var $author$project$DrawingZone$getSvgLine = F2(
 				]),
 			_List_Nil);
 	});
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
 var $author$project$DrawingZone$progCursorToSvg = F3(
 	function (p, c, l) {
 		progCursorToSvg:
@@ -6016,7 +6020,7 @@ var $author$project$DrawingZone$progCursorToSvg = F3(
 						var cp = A3($author$project$DrawingZone$progCursorToSvg, bloc, c, l);
 						var $temp$p = A2($elm$core$List$cons, rp, subprog),
 							$temp$c = cp.a,
-							$temp$l = l;
+							$temp$l = cp.b;
 						p = $temp$p;
 						c = $temp$c;
 						l = $temp$l;
@@ -6059,10 +6063,6 @@ var $author$project$DrawingZone$progCursorToSvg = F3(
 			}
 		}
 	});
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
-};
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		if (msg.$ === 'Change') {
@@ -6079,11 +6079,19 @@ var $author$project$Main$update = F2(
 						if (_v1.$ === 'Err') {
 							return _List_Nil;
 						} else {
-							var expr = _v1.a;
 							return A3(
 								$author$project$DrawingZone$progCursorToSvg,
 								_List_fromArray(
-									[expr]),
+									[
+										A2(
+										$author$project$MyTypes$Repeat,
+										360,
+										_List_fromArray(
+											[
+												$author$project$MyTypes$Forward(1),
+												$author$project$MyTypes$Left(1)
+											]))
+									]),
 								A3($author$project$MyTypes$Cursor, 250, 250, 0),
 								_List_Nil).b;
 						}
