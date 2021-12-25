@@ -61,4 +61,5 @@ view model =
     , svg 
       [viewBox "0 0 500 500", width "500", height "500"] 
       model.lineList
+    , div [class "version"] [text ("V1.0 finalisée le 25/12/2021 🎅")]
     ]

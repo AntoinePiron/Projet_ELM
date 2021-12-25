@@ -28,8 +28,15 @@ body{
     font-style: italic;
     padding-top: 1%;
 }
+
 svg {
     width: 100%;
     max-width: 500px;
     border: 1px solid black;
+}
+
+.version {
+    font-size: 0.7em;
+    font-style: italic;
+    color: gray;
 }
