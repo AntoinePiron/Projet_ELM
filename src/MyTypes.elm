@@ -12,11 +12,6 @@ type alias Cursor =
     , a : Float
     }
 
-type alias InstStruct =
-    { cmd : String
-    , step : Int
-    }
-
 type MyEvent
   = Change String
   | Validate

@@ -1,16 +1,16 @@
 module MyParser exposing(..)
 import Parser exposing (Parser, (|.), (|=), succeed)
-import Parser exposing (run, DeadEnd)
-import Parser exposing (symbol)
 import Parser exposing (spaces)
 import Parser exposing (int)
 import Parser exposing (keyword)
 import Parser exposing (oneOf)
-import Parser exposing (getChompedString)
-import Parser exposing (chompIf)
-import Parser exposing (chompWhile)
 
-import MyTypes exposing (..)
+import MyTypes exposing (..) 
+import Parser exposing (sequence)
+import Parser exposing (Trailing(..))
+import Parser exposing (DeadEnd)
+import Parser exposing (run)
+import Parser exposing (lazy)
 
 instruction : Parser Inst
 instruction = 
@@ -27,35 +27,26 @@ instruction =
         |. keyword "Right"
         |. spaces
         |= int
+    , succeed Repeat
+        |. keyword "Repeat"
+        |. spaces
+        |= int
+        |. spaces
+        |= lazy (\_ -> block)
     ]
 
-word : Parser String
-word =
-  getChompedString <|
-    succeed ()
-      |. chompIf Char.isAlphaNum
-      |. chompWhile Char.isAlphaNum
+block : Parser (List Inst)
+block = 
+  sequence
+  { start = "["
+    , separator = ","
+    , end = "]"
+    , spaces = spaces
+    , item = instruction
+    , trailing = Optional -- demand a trailing semi-colon
+    }
 
-instructionBloc : Parser InstStruct
-instructionBloc = 
-  succeed InstStruct
-    |. symbol "["
-    |. spaces
-    |= word
-    |. spaces
-    |= int
-    |. spaces
-    |. symbol "]"
+blockParser : String -> Result (List DeadEnd) (List Inst)
+blockParser str = 
+  run block str
 
-instBlocParser : String -> Result (List DeadEnd) InstStruct
-instBlocParser string = 
-  run instructionBloc string
-
-
-instParser : String -> Result (List DeadEnd) Inst
-instParser string =
-  case instBlocParser string of
-    Err er ->
-      Result.Err er
-    Ok expr ->
-      run instruction (expr.cmd ++ " " ++ String.fromInt expr.step) 

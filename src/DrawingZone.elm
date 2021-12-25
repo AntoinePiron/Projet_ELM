@@ -31,8 +31,8 @@ changeCursor c inst =
         (Forward v) -> let dx = toFloat v * (cos (c.a / 180.0 * pi))
                            dy = toFloat v * (sin (c.a / 180.0 * pi))
                         in Cursor (c.x+dx) (c.y+dy) c.a
-        (Left v) -> Cursor (c.x) (c.y) (changeAngle(c.a + (toFloat v)))
-        (Right v) -> Cursor (c.x) (c.y) (changeAngle(c.a - (toFloat v)))
+        (Left v) -> Cursor (c.x) (c.y) (changeAngle(c.a - (toFloat v)))
+        (Right v) -> Cursor (c.x) (c.y) (changeAngle(c.a + (toFloat v)))
         _ -> c
 
 progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> (Cursor, List (Svg MyEvent))

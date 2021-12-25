@@ -37,12 +37,12 @@ update msg model =
       { model | content = newContent }
 
     Validate ->
-      { model | lineList = case instParser model.content of
+      { model | lineList = case blockParser model.content of
                             Err _ ->
                               []
 
-                            Ok expr ->
-                              (Tuple.second (progCursorToSvg [expr] (Cursor 250 250 0) []))
+                            Ok expr -> 
+                              (Tuple.second (progCursorToSvg expr (Cursor 250 250 0) []))
       }
 
 
