@@ -21,11 +21,13 @@ main =
 type alias Model =
   { content : String
   , display : String
+  , instruction : Prog
   }
 init : Model
 init =
   { content = "" 
   , display = ""
+  , instruction = []
   }
 
 -- UPDATE
