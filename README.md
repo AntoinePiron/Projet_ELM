@@ -8,3 +8,10 @@ In order to run the project you can just open the [index.html](./index.html) fil
 If you need to recompile the project you can use the provided script by typing the `./compile`command but you need to have Elm and UglifyJS installed on your computer. <br />
  - Install Elm [here](https://guide.elm-lang.org/install/elm.html)
  - Install UglifyJS with npm : `npm install uglify-js -g`
+
+## Structure of the Elm code
+We have 4 Elm files working together : 
+ - *__MyTypes.elm__* &rarr; the custom types that we'll need in all the files.
+ - *__MyParser.elm__* &rarr; the parser used to check if the user input is an instruction runnable by TcTurtle.
+ - *__DrawingZone.elm__* &rarr; all the functiun needed to generate the svg structure from the instructions.
+ - *__Main.elm__* &rarr; the main program who defines the page with the model, view and update functions.
