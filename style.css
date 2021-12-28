@@ -40,3 +40,18 @@ svg {
     font-style: italic;
     color: gray;
 }
+
+.settingsTitle {
+    margin: auto;
+    padding-bottom: 2%; 
+}
+
+.colorButtons {
+    width: 33%;
+}
+
+.colorHint {
+    margin: auto;
+    font-size: 0.7em;
+    font-style: italic;
+}

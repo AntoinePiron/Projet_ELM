@@ -3,15 +3,16 @@ import Svg exposing (Svg, line)
 import Svg.Attributes exposing (x1, x2, y1, y2, stroke)
 import MyTypes exposing (..)
 
+
 {--Méthode dessinant une ligne entre les deux curseurs rentré en argument--}
-getSvgLine : Cursor -> Cursor -> Svg MyEvent
-getSvgLine a b =
+getSvgLine : Cursor -> Cursor -> String ->Svg MyEvent
+getSvgLine a b color=
     line 
         [ x1 (String.fromFloat a.x)
         , y1 (String.fromFloat a.y)
         , x2 (String.fromFloat b.x)
         , y2 (String.fromFloat b.y)
-        , stroke "red"
+        , stroke color
         ] [] 
 
 {--Méthode permettant de modifier l'angle pour avoir a compris entre 0 et 360 --}
@@ -35,26 +36,25 @@ changeCursor c inst =
         (Right v) -> Cursor (c.x) (c.y) (changeAngle(c.a + (toFloat v)))
         _ -> c
 
-progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> (Cursor, List (Svg MyEvent))
-progCursorToSvg p c l=
-    case p of
-        [] -> (c, l)
+progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> String ->(Cursor, List (Svg MyEvent))
+progCursorToSvg prog curs list color=
+    case prog of
+        [] -> (curs, list)
         Repeat n bloc::subprog ->
             if n > 0 then
                 let rp = Repeat (n - 1) bloc
                 in 
-                    let 
-                        cp = progCursorToSvg bloc c l
-                    in progCursorToSvg (rp::subprog) (Tuple.first cp) (Tuple.second cp) 
+                    let cp = progCursorToSvg bloc curs list color
+                    in progCursorToSvg (rp::subprog) (Tuple.first cp) (Tuple.second cp) color
             else
-                progCursorToSvg subprog c l
+                progCursorToSvg subprog curs list color
         inst::subprog ->
-            let cp = changeCursor c inst
+            let cp = changeCursor curs inst
             in case inst of
                 (Forward _) -> 
-                    let conc = (getSvgLine c cp)::l
-                    in progCursorToSvg subprog cp conc
+                    let conc = (getSvgLine curs cp color)::list
+                    in progCursorToSvg subprog cp conc color
                 _ ->
-                    progCursorToSvg subprog cp l
+                    progCursorToSvg subprog cp list color
 
         

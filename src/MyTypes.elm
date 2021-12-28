@@ -15,3 +15,4 @@ type alias Cursor =
 type MyEvent
   = Change String
   | Validate
+  | ModifyColor String
