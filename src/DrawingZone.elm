@@ -36,6 +36,10 @@ changeCursor c inst =
         (Right v) -> Cursor (c.x) (c.y) (changeAngle(c.a + (toFloat v)))
         _ -> c
 
+{-- 
+Méthode qui tranforme une suite d'instruction en une liste d'élément svg
+Cette métode prend en paramètre une programmation (qui nous provient du parser), un curseur qui définit la position initiale, une liste d'élément svg (initialement vide) et une couleur 
+--}
 progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> String ->(Cursor, List (Svg MyEvent))
 progCursorToSvg prog curs list color=
     case prog of
