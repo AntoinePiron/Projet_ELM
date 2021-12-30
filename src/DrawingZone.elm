@@ -39,7 +39,7 @@ changeCursor c inst =
 
 {-- 
 Méthode qui tranforme une suite d'instruction en une liste d'élément svg
-Cette métode prend en paramètre une programmation (qui nous provient du parser), un curseur qui définit la position initiale, une liste d'élément svg (initialement vide) et une couleur 
+Cette métode prend en paramètre une programmation (qui nous provient du parser), un curseur qui définit la position initiale, une liste d'élément svg (initialement vide), une couleur et une épaisseur
 --}
 progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> String -> String -> (Cursor, List (Svg MyEvent))
 progCursorToSvg prog curs list color thickness=
