@@ -23,4 +23,5 @@ We used elm natives packages :
  - html
  - parser
  - svg <br/>
+
 But we also installed the package [carwow/elm-slider](https://opensourcelibs.com/lib/elm-slider) in order to generate the slider for the line thickness.
