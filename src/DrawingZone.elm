@@ -1,6 +1,6 @@
 module DrawingZone exposing (..)
 import Svg exposing (Svg, line)
-import Svg.Attributes exposing (x1, x2, y1, y2, stroke)
+import Svg.Attributes exposing (x1, x2, y1, y2, stroke, style)
 import MyTypes exposing (..)
 
 
@@ -13,6 +13,7 @@ getSvgLine a b color=
         , x2 (String.fromFloat b.x)
         , y2 (String.fromFloat b.y)
         , stroke color
+        , style ("stroke:"++ color ++";stroke-width:1")
         ] [] 
 
 {--Méthode permettant de modifier l'angle pour avoir a compris entre 0 et 360 --}

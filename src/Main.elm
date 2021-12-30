@@ -1,7 +1,4 @@
-module Main exposing(..)
--- !!!!!!!!!!
--- Command to generate main.js file : elm make src/Main.elm --output=main.js
--- !!!!!!!!!!
+module Main exposing(main)
 
 import Browser
 import Html exposing (Html, div, input, text, button)
