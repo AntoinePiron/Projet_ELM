@@ -56,131 +56,133 @@ svg {
     font-style: italic;
 }
 
+/* SLIDER SETTINGS */
+
 .mySlider {
     margin: 1%;
 }
 
-
 .input-range-container {
-display: inline-flex;
-align-items: center;
-position: relative;
-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    height: 3vh;
+    margin-top: 1vh;
 }
 
 /* In the case of the double slider, each individual slider has it's width set to 100% of the parent element. Therefore, in order to set a fixed width, it is recommended to set it on the parent element and not override the width of the range slider. This is to ensure the flexibility of the component. */
 .input-range-container,
 .input-range {
-width: 100%;
+    width: 100%;
 }
 
 .input-range,
 .input-range:hover,
 .input-range:focus {
-box-shadow: none;
+    box-shadow: none;
 }
 
 .input-range {
--webkit-appearance: none;
-background-color: transparent;
-padding: 0;
-overflow: visible;
-pointer-events: none;
-height: 48px;
-border: 0;
+    -webkit-appearance: none;
+    background-color: transparent;
+    padding: 0;
+    overflow: visible;
+    pointer-events: none;
+    height: 48px;
+    border: 0;
 }
 
 .input-range::-moz-focus-outer {
-border: 0;
+    border: 0;
 }
 
 .input-range::-webkit-slider-thumb {
--webkit-appearance: none;
-height: 32px;
-width: 32px;
-border: none;
-background-color: white;
-border-radius: 100%;
-box-shadow: 0 0 0 2px rgba(33, 34, 36, 0.07);
-cursor: pointer;
-pointer-events: all;
-z-index: 2;
-position: relative;
+    -webkit-appearance: none;
+    height: 1.5vh;
+    width: 1.5vh;
+    border: none;
+    background-color: white;
+    border-radius: 100%;
+    box-shadow: 0 0 0 2px rgba(33, 34, 36, 0.07);
+    cursor: pointer;
+    pointer-events: all;
+    z-index: 2;
+    position: relative;
 }
 
 .input-range::-moz-range-track {
-background: transparent;
+    background: transparent;
 }
 
 .input-range::-moz-range-thumb {
-height: 32px;
-width: 32px;
-border: none;
-background-color: white;
-border-radius: 100%;
-box-shadow: 0 0 0 2px rgba(33, 34, 36, 0.07);
-cursor: pointer;
-pointer-events: all;
-z-index: 2;
-position: relative;
-transform: scale(1);
+    height: 1.5vh;
+    width: 1.5vh;
+    border: none;
+    background-color: white;
+    border-radius: 100%;
+    box-shadow: 0 0 0 2px rgba(33, 34, 36, 0.07);
+    cursor: pointer;
+    pointer-events: all;
+    z-index: 2;
+    position: relative;
+    transform: scale(1);
 }
 
 .input-range::-ms-track {
-background-color: transparent;
-border-color: transparent;
-color: transparent;
+    background-color: transparent;
+    border-color: transparent;
+    color: transparent;
 }
 
 .input-range::-ms-fill-lower {
-background-color: transparent;
+    background-color: transparent;
 }
 
 .input-range::-ms-thumb {
-height: 32px;
-width: 32px;
-border: none;
-background-color: white;
-border-radius: 100%;
-box-shadow: 0 0 0 2px rgba(33, 34, 36, 0.07);
-cursor: pointer;
-pointer-events: all;
-z-index: 2;
-position: relative;
+    height: 1.5vh;
+    width: 1.5vh;
+    border: none;
+    background-color: white;
+    border-radius: 100%;
+    box-shadow: 0 0 0 2px rgba(33, 34, 36, 0.07);
+    cursor: pointer;
+    pointer-events: all;
+    z-index: 2;
+    position: relative;
 }
 
 .input-range:disabled, .input-range:disabled:hover {
-cursor: not-allowed;
-box-shadow: none;
-border: 0;
-background-color: transparent;
+    cursor: not-allowed;
+    box-shadow: none;
+    border: 0;
+    background-color: transparent;
 }
 
 .input-range:disabled::-webkit-slider-thumb, .input-range:disabled:hover::-webkit-slider-thumb {
-cursor: not-allowed;
+    cursor: not-allowed;
 }
 
 .input-range:disabled::-moz-range-thumb, .input-range:disabled:hover::-moz-range-thumb {
-cursor: not-allowed;
+    cursor: not-allowed;
 }
 
 .input-range:disabled::-ms-thumb, .input-range:disabled:hover::-ms-thumb {
-cursor: not-allowed;
+    cursor: not-allowed;
 }
 
 .input-range:disabled ~ .input-range__track, .input-range:disabled:hover ~ .input-range__track {
-cursor: not-allowed;
-background-color: #fafafa;
+    cursor: not-allowed;
+    background-color: #fafafa;
 }
 
 .input-range:disabled ~ .input-range__progress, .input-range:disabled:hover ~ .input-range__progress {
-cursor: not-allowed;
-background-color: #dcdee1;
+    cursor: not-allowed;
+    background-color: #dcdee1;
 }
 
 .slider-thumb {
-    height: 32px;
-    width: 32px;
+    height: 1.5vh;
+    width: 1.5vh;
     border: none;
     background-color: white;
     border-radius: 100%;
@@ -234,7 +236,7 @@ position: relative;
 }
 
 .input-range__progress {
-    background-color: #00a4ff;
+    background-color: #617c8a;
 }
 
 .input-range-labels-container {
@@ -243,19 +245,21 @@ position: relative;
 }
 
 .input-range-label {
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .input-range-label--current-value {
-    color: #00a4ff;
+    color: #617c8a;
     text-align: center;
     flex: 2;
 }
 
 .input-range-label:first-child {
     text-align: left;
+    font-size: 0.8em;
 }
 
 .input-range-label:last-child {
     text-align: right;
+    font-size: 0.8em;
 }

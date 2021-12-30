@@ -24,9 +24,7 @@ type alias Model =
   , drawingColor : String
   , singleSlider : SingleSlider.SingleSlider MyEvent
   }
-
-minFormatter =
-  \value -> String.fromFloat value
+  
 init : Model
 init =
   { content = "" 
@@ -39,7 +37,7 @@ init =
       , step = 0.1
       , onChange = SingleSliderChange
       }
-      |> SingleSlider.withMinFormatter (minFormatter)
+      |> SingleSlider.withMinFormatter (\value -> String.fromFloat value)
   }
 
 -- UPDATE
