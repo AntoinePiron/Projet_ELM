@@ -1,15 +1,16 @@
 module Main exposing(main)
-
+-- Elm packages import
 import Browser
-import Html exposing (Html, div, input, text, button)
+import Html exposing (Html, div, input, text, button, p)
 import Html.Attributes exposing (class, placeholder, value)
 import Html.Events exposing (onInput, onClick)
-import MyParser exposing (..)
-import DrawingZone exposing (..)
 import Svg exposing (Svg, svg)
 import Svg.Attributes exposing (width, height, viewBox)
+import SingleSlider exposing (..)
+-- Import of our files
 import MyTypes exposing (..)
-import Html exposing (p)
+import MyParser exposing (..)
+import DrawingZone exposing (..)
 
 -- MAIN
 main : Program () Model MyEvent
@@ -21,12 +22,24 @@ type alias Model =
   { content : String
   , lineList : List (Svg MyEvent)
   , drawingColor : String
+  , singleSlider : SingleSlider.SingleSlider MyEvent
   }
+
+minFormatter =
+  \value -> String.fromFloat value
 init : Model
 init =
   { content = "" 
   , lineList = []
   , drawingColor = "red"
+  , singleSlider = SingleSlider.init
+      { min = 0
+      , max = 5
+      , value = 2.5
+      , step = 0.1
+      , onChange = SingleSliderChange
+      }
+      |> SingleSlider.withMinFormatter (minFormatter)
   }
 
 -- UPDATE
@@ -48,6 +61,9 @@ update msg model =
     ModifyColor newColor ->
       { model | drawingColor = newColor}
 
+    SingleSliderChange str ->
+      { model | singleSlider = SingleSlider.update str model.singleSlider }
+
 
 
 -- VIEW
@@ -63,11 +79,14 @@ view model =
     , div [ class "settings"] 
         [ p [class "settingsTitle"] [text "Cursor Settings : "]
         , div [ class "colors"] 
-        [ button [onClick (ModifyColor "green"),class "colorButtons" ] [ text "Green" ]
-        , button [onClick (ModifyColor "red"),class "colorButtons" ] [ text "Red" ]
-        , button [onClick (ModifyColor "blue"),class "colorButtons" ] [ text "Blue" ]
-        , p [class "colorHint"] [text ("Current color : " ++ model.drawingColor ++ " (if not press the draw button again to refresh the color)")]
-        ]
+          [ button [onClick (ModifyColor "green"),class "colorButtons" ] [ text "Green" ]
+          , button [onClick (ModifyColor "red"),class "colorButtons" ] [ text "Red" ]
+          , button [onClick (ModifyColor "blue"),class "colorButtons" ] [ text "Blue" ]
+          , p [class "colorHint"] [text ("Current color : " ++ model.drawingColor ++ " (if not press the draw button again to refresh the color)")]
+          ]
+        , div [class "strokeWidth"] 
+          [div [class "mySlider"] [ SingleSlider.view model.singleSlider ]
+          ]
       ]
     , button [ onClick Validate, class "drawButton" ] [ text "Draw" ]
     , svg [viewBox "0 0 500 700", width "500", height "500"] 

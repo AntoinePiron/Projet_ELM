@@ -16,3 +16,4 @@ type MyEvent
   = Change String
   | Validate
   | ModifyColor String
+  | SingleSliderChange Float
