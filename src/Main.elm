@@ -23,6 +23,7 @@ type alias Model =
   , lineList : List (Svg MyEvent)
   , drawingColor : String
   , singleSlider : SingleSlider.SingleSlider MyEvent
+  , lineThickness : Float
   }
   
 init : Model
@@ -31,13 +32,13 @@ init =
   , lineList = []
   , drawingColor = "red"
   , singleSlider = SingleSlider.init
-      { min = 0
+      { min = 0.1
       , max = 5
-      , value = 2.5
+      , value = 1
       , step = 0.1
       , onChange = SingleSliderChange
       }
-      |> SingleSlider.withMinFormatter (\value -> String.fromFloat value)
+  , lineThickness = 1
   }
 
 -- UPDATE
@@ -53,14 +54,16 @@ update msg model =
                               []
 
                             Ok expr -> 
-                              (Tuple.second (progCursorToSvg expr (Cursor 250 250 0) [] model.drawingColor))
+                              (Tuple.second (progCursorToSvg expr (Cursor 250 250 0) [] model.drawingColor (String.fromFloat model.lineThickness)))
       }
     
     ModifyColor newColor ->
-      { model | drawingColor = newColor}
+      let new = { model | drawingColor = newColor}
+      in update Validate new
 
     SingleSliderChange str ->
-      { model | singleSlider = SingleSlider.update str model.singleSlider }
+      let new = { content = model.content , lineList = model.lineList, drawingColor = model.drawingColor, singleSlider = SingleSlider.update str model.singleSlider, lineThickness = str}
+      in update Validate new
 
 
 
@@ -72,18 +75,19 @@ view model =
       [ text("Projet Elm")
       , div [class "subtitles"] [text("Par Tristan Devin, Salma Aziz-Alaoui, Yasser Issam, Antoine Piron")]
       ]
-    , div [class "inputTitle"] [text("Type in your code below:")]
+    , div [class "sectionTitle"] [text("Type in your code below:")]
     , input [ placeholder "example: [Repeat 360 [Forward 1, Left 1]]", value model.content, onInput Change, class "userInput" ] []
     , div [ class "settings"] 
-        [ p [class "settingsTitle"] [text "Cursor Settings : "]
+        [ p [class "sectionTitle"] [text "Cursor Settings : "]
         , div [ class "colors"] 
-          [ button [onClick (ModifyColor "green"),class "colorButtons" ] [ text "Green" ]
+          [ p [class "littleSettingsTitle"] [text "Line color : "]
+          , button [onClick (ModifyColor "green"),class "colorButtons" ] [ text "Green" ]
           , button [onClick (ModifyColor "red"),class "colorButtons" ] [ text "Red" ]
           , button [onClick (ModifyColor "blue"),class "colorButtons" ] [ text "Blue" ]
-          , p [class "colorHint"] [text ("Current color : " ++ model.drawingColor ++ " (if not press the draw button again to refresh the color)")]
           ]
         , div [class "strokeWidth"] 
-          [div [class "mySlider"] [ SingleSlider.view model.singleSlider ]
+          [ p [class "littleSettingsTitle"] [text ("Line thickness : ")]
+          , div [class "mySlider"] [ SingleSlider.view model.singleSlider ]
           ]
       ]
     , button [ onClick Validate, class "drawButton" ] [ text "Draw" ]

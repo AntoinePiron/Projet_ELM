@@ -5,15 +5,15 @@ import MyTypes exposing (..)
 
 
 {--Méthode dessinant une ligne entre les deux curseurs rentré en argument--}
-getSvgLine : Cursor -> Cursor -> String ->Svg MyEvent
-getSvgLine a b color=
+getSvgLine : Cursor -> Cursor -> String -> String ->Svg MyEvent
+getSvgLine a b color thickness=
     line 
         [ x1 (String.fromFloat a.x)
         , y1 (String.fromFloat a.y)
         , x2 (String.fromFloat b.x)
         , y2 (String.fromFloat b.y)
         , stroke color
-        , style ("stroke:"++ color ++";stroke-width:1")
+        , style ("stroke:"++ color ++";stroke-width:"++thickness)
         ] [] 
 
 {--Méthode permettant de modifier l'angle pour avoir a compris entre 0 et 360 --}
@@ -41,25 +41,25 @@ changeCursor c inst =
 Méthode qui tranforme une suite d'instruction en une liste d'élément svg
 Cette métode prend en paramètre une programmation (qui nous provient du parser), un curseur qui définit la position initiale, une liste d'élément svg (initialement vide) et une couleur 
 --}
-progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> String ->(Cursor, List (Svg MyEvent))
-progCursorToSvg prog curs list color=
+progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> String -> String -> (Cursor, List (Svg MyEvent))
+progCursorToSvg prog curs list color thickness=
     case prog of
         [] -> (curs, list)
         Repeat n bloc::subprog ->
             if n > 0 then
                 let rp = Repeat (n - 1) bloc
                 in 
-                    let cp = progCursorToSvg bloc curs list color
-                    in progCursorToSvg (rp::subprog) (Tuple.first cp) (Tuple.second cp) color
+                    let cp = progCursorToSvg bloc curs list color thickness
+                    in progCursorToSvg (rp::subprog) (Tuple.first cp) (Tuple.second cp) color thickness
             else
-                progCursorToSvg subprog curs list color
+                progCursorToSvg subprog curs list color thickness
         inst::subprog ->
             let cp = changeCursor curs inst
             in case inst of
                 (Forward _) -> 
-                    let conc = (getSvgLine curs cp color)::list
-                    in progCursorToSvg subprog cp conc color
+                    let conc = (getSvgLine curs cp color thickness)::list
+                    in progCursorToSvg subprog cp conc color thickness
                 _ ->
-                    progCursorToSvg subprog cp list color
+                    progCursorToSvg subprog cp list color thickness
 
         

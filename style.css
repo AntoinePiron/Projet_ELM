@@ -41,9 +41,10 @@ svg {
     color: gray;
 }
 
-.settingsTitle {
+.sectionTitle {
     margin: auto;
     padding-bottom: 2%; 
+    text-decoration: underline;
 }
 
 .colorButtons {
@@ -56,10 +57,17 @@ svg {
     font-style: italic;
 }
 
+.littleSettingsTitle {
+    margin: 1%;
+    text-align: left;
+    font-size: 0.9em;
+}
+
 /* SLIDER SETTINGS */
 
 .mySlider {
-    margin: 1%;
+    margin: auto;
+    margin-top: -3%;
 }
 
 .input-range-container {
