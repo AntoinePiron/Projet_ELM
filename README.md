@@ -17,10 +17,10 @@ We have 4 Elm files working together :
  - *__Main.elm__* &rarr; the main program who defines the page with the model, view and update functions.
 
 ## Particular package 
-We used lot of elm native package : 
+We used elm natives packages : 
  - browser
  - core
  - html
  - parser
- - svg
-But we also installed the package [carwow/elm-slider](https://opensourcelibs.com/lib/elm-slider) 
+ - svg <br/>
+But we also installed the package [carwow/elm-slider](https://opensourcelibs.com/lib/elm-slider) in order to generate the slider for the line thickness.
