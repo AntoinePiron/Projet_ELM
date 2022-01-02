@@ -54,7 +54,7 @@ update msg model =
                               []
 
                             Ok expr -> 
-                              (Tuple.second (progCursorToSvg expr (Cursor 250 250 0) [] (model.drawingColor,(String.fromFloat model.lineThickness))))
+                              (Tuple.second (progCursorToSvg expr (Cursor 250 250 0) [] (model.drawingColor,(String.fromFloat model.lineThickness)) (Cursor 250 250 0,Cursor 250 250 0)))
       }
     
     ModifyColor newColor ->
