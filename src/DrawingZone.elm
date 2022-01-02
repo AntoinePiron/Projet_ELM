@@ -41,25 +41,25 @@ changeCursor c inst =
 Méthode qui tranforme une suite d'instruction en une liste d'élément svg
 Cette métode prend en paramètre une programmation (qui nous provient du parser), un curseur qui définit la position initiale, une liste d'élément svg (initialement vide), une couleur et une épaisseur
 --}
-progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> String -> String -> (Cursor, List (Svg MyEvent))
-progCursorToSvg prog curs list color thickness=
+progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> (String, String) -> (Cursor, List (Svg MyEvent))
+progCursorToSvg prog curs list attr=
     case prog of
         [] -> (curs, list)
         Repeat n bloc::subprog ->
             if n > 0 then
                 let rp = Repeat (n - 1) bloc
                 in 
-                    let cp = progCursorToSvg bloc curs list color thickness
-                    in progCursorToSvg (rp::subprog) (Tuple.first cp) (Tuple.second cp) color thickness
+                    let cp = progCursorToSvg bloc curs list attr
+                    in progCursorToSvg (rp::subprog) (Tuple.first cp) (Tuple.second cp) attr
             else
-                progCursorToSvg subprog curs list color thickness
+                progCursorToSvg subprog curs list attr
         inst::subprog ->
             let cp = changeCursor curs inst
             in case inst of
                 (Forward _) -> 
-                    let conc = (getSvgLine curs cp color thickness)::list
-                    in progCursorToSvg subprog cp conc color thickness
+                    let conc = (getSvgLine curs cp (Tuple.first attr) (Tuple.second attr))::list
+                    in progCursorToSvg subprog cp conc attr
                 _ ->
-                    progCursorToSvg subprog cp list color thickness
+                    progCursorToSvg subprog cp list attr
 
         
