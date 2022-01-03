@@ -43,14 +43,6 @@ init =
   , viewBoxPan = ("0","0")
   }
 
-getLineList : Model -> List (Svg MyEvent)
-getLineList model = 
-  case blockParser model.content of
-    Err _ ->
-      []
-    Ok expr -> 
-      (Tuple.second (progCursorToSvg expr (Cursor 250 250 0) [] (model.drawingColor,(String.fromFloat model.lineThickness))))
-
 -- UPDATE
 update : MyEvent -> Model -> Model
 update msg model =
@@ -65,7 +57,7 @@ update msg model =
                   []
                 Ok e -> 
                   e
-        new = { model | lineList =  getLineList model}
+        new = { model | lineList =  (Tuple.second (progCursorToSvg expr (Cursor 250 250 0) [] (model.drawingColor,(String.fromFloat model.lineThickness))))}
         minmax = (Tuple.second (getMinMaxCoordinates expr (Cursor 250 250 0) (Cursor 250 250 0,Cursor 250 250 0)))
         dx = ((Tuple.first minmax).x + (Tuple.second minmax).x)/2.0 - 250
         dy = ((Tuple.first minmax).y + (Tuple.second minmax).y)/2.0 - 250 

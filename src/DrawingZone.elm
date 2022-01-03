@@ -1,13 +1,21 @@
 module DrawingZone exposing (..)
+
 import Svg exposing (Svg, line)
 import Svg.Attributes exposing (x1, x2, y1, y2, stroke, style)
+
 import MyTypes exposing (..)
 
-
-{--Méthode dessinant une ligne entre les deux curseurs rentré en argument--}
 getSvgLine : Cursor -> Cursor -> String -> String -> Svg MyEvent
 getSvgLine a b color thickness =
-    line [ x1 (String.fromFloat a.x), y1 (String.fromFloat a.y), x2 (String.fromFloat b.x), y2 (String.fromFloat b.y), stroke color, style ("stroke:"++ color ++";stroke-width:"++thickness)] [] 
+    line 
+        [ x1 (String.fromFloat a.x)
+        , y1 (String.fromFloat a.y)
+        , x2 (String.fromFloat b.x)
+        , y2 (String.fromFloat b.y)
+        , stroke color
+        , style ("stroke:"++ color ++";stroke-width:"++thickness)
+        ] 
+        [] 
 
 
 getMinMaxCoordinates : List Inst -> Cursor ->(Cursor, Cursor) -> (Cursor, (Cursor, Cursor))
@@ -56,7 +64,6 @@ getMinMaxCoordinates prog currCurs curs =
                 _ ->
                     getMinMaxCoordinates subprog cp curs
 
-{--Méthode permettant de modifier l'angle pour avoir a compris entre 0 et 360 --}
 changeAngle : Float -> Float
 changeAngle a = 
     if a < 0 then
@@ -66,7 +73,6 @@ changeAngle a =
     else 
         a
 
-{-- Méthode qui actualise le curseur en fonction de l'instruction donnée --}
 changeCursor : Cursor -> Inst -> Cursor
 changeCursor c inst =
     case inst of
@@ -77,13 +83,6 @@ changeCursor c inst =
         (Right v) -> Cursor (c.x) (c.y) (changeAngle(c.a + (toFloat v)))
         _ -> c
 
-{-- 
-Méthode qui tranforme une suite d'instruction en une liste d'élément svg
-Cette métode prend en paramètre une programmation (qui nous provient du parser),
-un curseur qui définit la position initiale, une liste d'élément svg (initialement vide), 
-une couleur et une épaisseur sous forme de tuple pour alléger les appels récursifs 
-un tuple de curseur pour avoir les positions min et max
---}
 progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> (String, String)-> (Cursor, List (Svg MyEvent))
 progCursorToSvg prog curs list attr =
     case prog of
