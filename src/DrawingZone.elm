@@ -5,10 +5,56 @@ import MyTypes exposing (..)
 
 
 {--Méthode dessinant une ligne entre les deux curseurs rentré en argument--}
-getSvgLine : Cursor -> Cursor -> String -> String -> (Cursor, Cursor) -> (Svg MyEvent, (Cursor,Cursor))
-getSvgLine a b color thickness minmax =
-    let myline = line [ x1 (String.fromFloat a.x), y1 (String.fromFloat a.y), x2 (String.fromFloat b.x), y2 (String.fromFloat b.y), stroke color, style ("stroke:"++ color ++";stroke-width:"++thickness)] [] 
-    in (myline, minmax)
+getSvgLine : Cursor -> Cursor -> String -> String -> Svg MyEvent
+getSvgLine a b color thickness =
+    line [ x1 (String.fromFloat a.x), y1 (String.fromFloat a.y), x2 (String.fromFloat b.x), y2 (String.fromFloat b.y), stroke color, style ("stroke:"++ color ++";stroke-width:"++thickness)] [] 
+
+
+getMinMaxCoordinates : List Inst -> Cursor ->(Cursor, Cursor) -> (Cursor, (Cursor, Cursor))
+getMinMaxCoordinates prog currCurs curs = 
+    case prog of
+        [] -> (currCurs, curs)
+        Repeat n bloc::subprog ->
+            if n > 0 then
+                let rp = Repeat (n - 1) bloc
+                in 
+                    let cp = getMinMaxCoordinates bloc currCurs curs
+                    in getMinMaxCoordinates (rp::subprog) (Tuple.first cp) (Tuple.second cp)
+            else
+                getMinMaxCoordinates subprog currCurs curs
+        inst::subprog ->
+            let cp = changeCursor currCurs inst
+            in case inst of
+                (Forward _) -> 
+                    let 
+                        xmin =  if currCurs.x < (Tuple.first curs).x then 
+                                    currCurs.x 
+                                else if cp.x < (Tuple.first curs).x then 
+                                    cp.x 
+                                else 
+                                    (Tuple.first curs).x
+                        ymin =  if currCurs.y < (Tuple.first curs).y then 
+                                    currCurs.y
+                                else if cp.y < (Tuple.first curs).y then 
+                                    cp.y
+                                else 
+                                    (Tuple.first curs).y
+                        xmax =  if currCurs.x > (Tuple.second curs).x then 
+                                    currCurs.x 
+                                else if cp.x > (Tuple.second curs).x then 
+                                    cp.x 
+                                else 
+                                    (Tuple.second curs).x
+                        ymax =  if currCurs.y > (Tuple.second curs).y then 
+                                    currCurs.y 
+                                else if cp.y > (Tuple.second curs).y then 
+                                    cp.y 
+                                else 
+                                    (Tuple.second curs).y
+                        newMinMax = (Cursor xmin ymin 0, Cursor xmax ymax 0)    
+                    in getMinMaxCoordinates subprog cp newMinMax
+                _ ->
+                    getMinMaxCoordinates subprog cp curs
 
 {--Méthode permettant de modifier l'angle pour avoir a compris entre 0 et 360 --}
 changeAngle : Float -> Float
@@ -38,27 +84,26 @@ un curseur qui définit la position initiale, une liste d'élément svg (initial
 une couleur et une épaisseur sous forme de tuple pour alléger les appels récursifs 
 un tuple de curseur pour avoir les positions min et max
 --}
-progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> (String, String) -> (Cursor, Cursor) -> (Cursor, List (Svg MyEvent))
-progCursorToSvg prog curs list attr minmax=
+progCursorToSvg : List Inst -> Cursor -> List (Svg MyEvent) -> (String, String)-> (Cursor, List (Svg MyEvent))
+progCursorToSvg prog curs list attr =
     case prog of
         [] -> (curs, list)
         Repeat n bloc::subprog ->
             if n > 0 then
                 let rp = Repeat (n - 1) bloc
                 in 
-                    let cp = progCursorToSvg bloc curs list attr minmax
-                    in progCursorToSvg (rp::subprog) (Tuple.first cp) (Tuple.second cp) attr minmax
+                    let cp = progCursorToSvg bloc curs list attr 
+                    in progCursorToSvg (rp::subprog) (Tuple.first cp) (Tuple.second cp) attr 
             else
-                progCursorToSvg subprog curs list attr minmax
+                progCursorToSvg subprog curs list attr 
         inst::subprog ->
             let cp = changeCursor curs inst
             in case inst of
                 (Forward _) -> 
                     let 
-                        res = (getSvgLine curs cp (Tuple.first attr) (Tuple.second attr) minmax)
-                        conc = (Tuple.first res)::list
-                    in progCursorToSvg subprog cp conc attr minmax
+                        conc = (getSvgLine curs cp (Tuple.first attr) (Tuple.second attr))::list
+                    in progCursorToSvg subprog cp conc attr 
                 _ ->
-                    progCursorToSvg subprog cp list attr minmax
+                    progCursorToSvg subprog cp list attr
 
         

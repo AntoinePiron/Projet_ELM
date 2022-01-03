@@ -24,6 +24,7 @@ type alias Model =
   , drawingColor : String
   , singleSlider : SingleSlider.SingleSlider MyEvent
   , lineThickness : Float
+  , viewBoxPan : (String, String)
   }
   
 init : Model
@@ -39,7 +40,16 @@ init =
       , onChange = SingleSliderChange
       }
   , lineThickness = 1
+  , viewBoxPan = ("0","0")
   }
+
+getLineList : Model -> List (Svg MyEvent)
+getLineList model = 
+  case blockParser model.content of
+    Err _ ->
+      []
+    Ok expr -> 
+      (Tuple.second (progCursorToSvg expr (Cursor 250 250 0) [] (model.drawingColor,(String.fromFloat model.lineThickness))))
 
 -- UPDATE
 update : MyEvent -> Model -> Model
@@ -49,23 +59,28 @@ update msg model =
       { model | content = newContent }
 
     Validate ->
-      { model | lineList = case blockParser model.content of
-                            Err _ ->
-                              []
-
-                            Ok expr -> 
-                              (Tuple.second (progCursorToSvg expr (Cursor 250 250 0) [] (model.drawingColor,(String.fromFloat model.lineThickness)) (Cursor 250 250 0,Cursor 250 250 0)))
-      }
+      let 
+        expr = case blockParser model.content of
+                Err _ ->
+                  []
+                Ok e -> 
+                  e
+        new = { model | lineList =  getLineList model}
+        minmax = (Tuple.second (getMinMaxCoordinates expr (Cursor 250 250 0) (Cursor 250 250 0,Cursor 250 250 0)))
+        dx = ((Tuple.first minmax).x + (Tuple.second minmax).x)/2.0 - 250
+        dy = ((Tuple.first minmax).y + (Tuple.second minmax).y)/2.0 - 250 
+      in update (ViewBoxChange ((String.fromFloat dx), (String.fromFloat dy))) new 
     
     ModifyColor newColor ->
       let new = { model | drawingColor = newColor}
       in update Validate new
 
     SingleSliderChange str ->
-      let new = { content = model.content , lineList = model.lineList, drawingColor = model.drawingColor, singleSlider = SingleSlider.update str model.singleSlider, lineThickness = str}
+      let new = { content = model.content , lineList = model.lineList, drawingColor = model.drawingColor, singleSlider = SingleSlider.update str model.singleSlider, lineThickness = str, viewBoxPan = model.viewBoxPan}
       in update Validate new
-
-
+    
+    ViewBoxChange newPan ->
+      {model | viewBoxPan = newPan}
 
 -- VIEW
 view : Model -> Html MyEvent
@@ -91,7 +106,7 @@ view model =
           ]
       ]
     , button [ onClick Validate, class "drawButton" ] [ text "Draw" ]
-    , svg [viewBox "0 0 500 500", width "500", height "500"] 
+    , svg [viewBox ((Tuple.first model.viewBoxPan)++ " " ++(Tuple.second model.viewBoxPan)++" 500 500"), width "500", height "500"] 
       model.lineList
     , div [class "version"] [text ("V1.0 finalisée le 25/12/2021 🎅")]
     ]

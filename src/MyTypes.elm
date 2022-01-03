@@ -17,3 +17,4 @@ type MyEvent
   | Validate
   | ModifyColor String
   | SingleSliderChange Float
+  | ViewBoxChange (String, String)
