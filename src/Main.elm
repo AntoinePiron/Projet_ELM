@@ -98,7 +98,6 @@ view model =
           ]
       ]
     , button [ onClick Validate, class "drawButton" ] [ text "Draw" ]
-    , svg [viewBox ((Tuple.first model.viewBoxPan)++ " " ++(Tuple.second model.viewBoxPan)++" 500 500"), width "500", height "500"] 
-      model.lineList
+    , svg [viewBox ((Tuple.first model.viewBoxPan)++ " " ++(Tuple.second model.viewBoxPan)++" 500 500"), width "500", height "500"] model.lineList
     , div [class "version"] [text ("V1.0 finalisée le 25/12/2021 🎅")]
     ]
